@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd
+      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.5.xsd">
+
+	<changeSet author="zealux-monitor" id="2022-06-11_1">
+		<comment>Create base data model.</comment>
+		<createTable tableName="status">
+			<column name="id" type="bigint">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="probe_time" type="timestamp">
+				<constraints nullable="false" />
+			</column>
+			<column name="index" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="value" type="int">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<createTable tableName="config">
+			<column name="id" type="bigint">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="probe_time" type="timestamp">
+				<constraints nullable="false" />
+			</column>
+			<column name="index" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="value" type="int">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<createTable tableName="parameter">
+			<column name="name" type="varchar(50)">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="index" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="type" type="varchar">
+				<constraints nullable="false" />
+			</column>
+			<column name="label" type="varchar(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="unit" type="varchar(10)">
+				<constraints nullable="true" />
+			</column>
+			<column name="description" type="varchar(1000)">
+				<constraints nullable="true" />
+			</column>
+		</createTable>
+
+		<createIndex indexName="status_idx" tableName="status" unique="false">
+			<column name="probe_time" />
+		</createIndex>
+
+		<createIndex indexName="config_idx" tableName="config" unique="false">
+			<column name="probe_time" />
+		</createIndex>
+
+		<createSequence sequenceName="value_id_seq" />
+	</changeSet>
+
+	<changeSet author="zealux-monitor" id="2022-06-11_2">
+		<comment>Add known parameters.</comment>
+		<insert tableName="parameter">
+			<column name="name" value="water_in_temp" />
+			<column name="index" value="16" />
+			<column name="type" value="status" />
+			<column name="label" value="Water in temperature" />
+			<column name="unit" value="°C" />
+			<column name="description" value="Temperature of the water flowing into the heat pump." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="water_out_temp" />
+			<column name="index" value="17" />
+			<column name="type" value="status" />
+			<column name="label" value="Water out temperature" />
+			<column name="unit" value="°C" />
+			<column name="description" value="Temperature of the water flowing out from the heat pump." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="ambient_temp" />
+			<column name="index" value="18" />
+			<column name="type" value="status" />
+			<column name="label" value="Ambient temperature" />
+			<column name="unit" value="°C" />
+			<column name="description" value="Temperature of the ambient air around the heat pump. Note that some of the cold air from the heat pump may affect this measurement." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="cold_pipe_temp" />
+			<column name="index" value="19" />
+			<column name="type" value="status" />
+			<column name="label" value="Cold pipe temperature" />
+			<column name="unit" value="°C" />
+			<column name="description" value="Temperature of the vaporizing pipe in the heat pump?" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="heating_pipe_temp" />
+			<column name="index" value="20" />
+			<column name="type" value="status" />
+			<column name="label" value="Heating pipe temperature" />
+			<column name="unit" value="°C" />
+			<column name="description" value="Temperature of the condenser pipe in the heat pump?" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="ipm_temp" />
+			<column name="index" value="21" />
+			<column name="type" value="status" />
+			<column name="label" value="IPM module temperature" />
+			<column name="unit" value="°C" />
+			<column name="description" value="Temperature of the intelligent power module." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="fan_speed" />
+			<column name="index" value="22" />
+			<column name="type" value="status" />
+			<column name="label" value="Fan speed" />
+			<column name="unit" value="RPM" />
+			<column name="description" value="Coil fan speed." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="exhaust_temp" />
+			<column name="index" value="23" />
+			<column name="type" value="status" />
+			<column name="label" value="Exhaust temperature" />
+			<column name="unit" value="°C" />
+			<column name="description" value="Temperature of the refrigerant flowing into the heat exchanger." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="unknown1" />
+			<column name="index" value="24" />
+			<column name="type" value="status" />
+			<column name="label" value="(unkown)" />
+			<column name="unit" value="°C" />
+			<column name="description" value="Defrost temperature? Seems to always be 0." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="eev_steps" />
+			<column name="index" value="25" />
+			<column name="type" value="status" />
+			<column name="label" value="EEV steps" />
+			<column name="unit" value="steps" />
+			<column name="description" value="Electronic exhaust valve opening setting." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="compressor_current" />
+			<column name="index" value="26" />
+			<column name="type" value="status" />
+			<column name="label" value="Compressor current" />
+			<column name="unit" value="A" />
+			<column name="description" value="How much current the compressor is currently drawing." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="compressor_frequency" />
+			<column name="index" value="27" />
+			<column name="type" value="status" />
+			<column name="label" value="Compressor frequency" />
+			<column name="unit" value="Hz" />
+			<column name="description" value="The current operating frequency of the compressor." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="compressor_speed" />
+			<column name="index" value="33" />
+			<column name="type" value="status" />
+			<column name="label" value="Compressor speed setting" />
+			<column name="description" value="Which internal predefined speed setting that is active." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="frequency_limit" />
+			<column name="index" value="34" />
+			<column name="type" value="status" />
+			<column name="label" value="Frequency limit code" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="alarm1" />
+			<column name="index" value="48" />
+			<column name="type" value="status" />
+			<column name="label" value="Alarm code 1" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="alarm2" />
+			<column name="index" value="49" />
+			<column name="type" value="status" />
+			<column name="label" value="Alarm code 2" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="alarm3" />
+			<column name="index" value="50" />
+			<column name="type" value="status" />
+			<column name="label" value="Alarm code 3" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="alarm4" />
+			<column name="index" value="51" />
+			<column name="type" value="status" />
+			<column name="label" value="Alarm code 4" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="system_status" />
+			<column name="index" value="52" />
+			<column name="type" value="status" />
+			<column name="label" value="System status code" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="system_run_code" />
+			<column name="index" value="53" />
+			<column name="type" value="status" />
+			<column name="label" value="System running code" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="device_status" />
+			<column name="index" value="54" />
+			<column name="type" value="status" />
+			<column name="label" value="Device status code" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="heating_max_temp" />
+			<column name="index" value="55" />
+			<column name="type" value="status" />
+			<column name="label" value="Max heating temperature" />
+			<column name="unit" value="°C" />
+			<column name="description" value="Maximum allowed water temperature while operating." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="cooling_min_temp" />
+			<column name="index" value="56" />
+			<column name="type" value="status" />
+			<column name="label" value="Minimum cooling temperature" />
+			<column name="unit" value="°C" />
+			<column name="description" value="Minimum allowed water temperature while operating." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="device_type" />
+			<column name="index" value="64" />
+			<column name="type" value="status" />
+			<column name="label" value="Device type code" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="hw_revision" />
+			<column name="index" value="65" />
+			<column name="type" value="status" />
+			<column name="label" value="Hardware revision" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="sw_revision" />
+			<column name="index" value="66" />
+			<column name="type" value="status" />
+			<column name="label" value="Software revision" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="hw_code" />
+			<column name="index" value="67" />
+			<column name="type" value="status" />
+			<column name="label" value="Manual hardware code" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="sw_code" />
+			<column name="index" value="68" />
+			<column name="type" value="status" />
+			<column name="label" value="Manual software code" />
+		</insert>
+
+		<insert tableName="parameter">
+			<column name="name" value="heating_target_temp" />
+			<column name="index" value="1" />
+			<column name="type" value="config" />
+			<column name="label" value="Heating target temperature" />
+			<column name="unit" value="°C" />
+			<column name="description" value="The desired water temperature when operating in heating mode." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="cooling_target_temp" />
+			<column name="index" value="2" />
+			<column name="type" value="config" />
+			<column name="label" value="Cooling target temperature" />
+			<column name="unit" value="°C" />
+			<column name="description" value="The desired water temperature when operating in cooling mode." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="auto_target_temp" />
+			<column name="index" value="3" />
+			<column name="type" value="config" />
+			<column name="label" value="Auto target temperature" />
+			<column name="unit" value="°C" />
+			<column name="description" value="The desired water temperature when operating in auto mode." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="sys_config_1" />
+			<column name="index" value="4" />
+			<column name="type" value="config" />
+			<column name="label" value="System config 1" />
+			<column name="description" value="Bit mask of system config. Bits: 0-1 = operating mode (0 = cool, 1 = heat, 2 = auto), 2 = timer on enabled, 3 = water pump running mode (0 = heat pump controls water pump, 1 = always on), 4 = electronic valve style?, 5 = on/off, 6 = debug mode (0 = auto, 1 = manual config)), 7 = timer off enabled" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="sys_config_2" />
+			<column name="index" value="5" />
+			<column name="type" value="config" />
+			<column name="label" value="System config 2" />
+			<column name="description" value="Bit mask of system config. Known bits: 0 = manual defrost" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="manual_frequency" />
+			<column name="index" value="6" />
+			<column name="type" value="config" />
+			<column name="label" value="Manual compressor frequency" />
+			<column name="unit" value="Hz" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="manual_eev" />
+			<column name="index" value="7" />
+			<column name="type" value="config" />
+			<column name="label" value="Manual EEV setting" />
+			<column name="unit" value="steps" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="manual_fan_speed" />
+			<column name="index" value="8" />
+			<column name="type" value="config" />
+			<column name="label" value="Manual fan speed" />
+			<column name="unit" value="RPM" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="defrost_in_temp" />
+			<column name="index" value="9" />
+			<column name="type" value="config" />
+			<column name="label" value="Defrost in temp" />
+			<column name="unit" value="°C" />
+			<column name="description" value="Heating pipe threshold to start defrost." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="defrost_out_temp" />
+			<column name="index" value="10" />
+			<column name="type" value="config" />
+			<column name="label" value="Defrost out temp" />
+			<column name="unit" value="°C" />
+			<column name="description" value="Heating pipe threshold to end defrost." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="water_in_temp_calibration" />
+			<column name="index" value="11" />
+			<column name="type" value="config" />
+			<column name="label" value="Water in temperature calibration" />
+			<column name="unit" value="°C" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="defrost_in_time" />
+			<column name="index" value="12" />
+			<column name="type" value="config" />
+			<column name="label" value="Defrost in time" />
+			<column name="unit" value="min" />
+			<column name="description" value="Minimum time between defrost sequences." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="defrost_out_time" />
+			<column name="index" value="13" />
+			<column name="type" value="config" />
+			<column name="label" value="Defrost out time" />
+			<column name="unit" value="min" />
+			<column name="description" value="Maximum defrost time?" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="hot_over" />
+			<column name="index" value="14" />
+			<column name="type" value="config" />
+			<column name="label" value="Hot over" />
+			<column name="unit" value="°C" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="cold_over" />
+			<column name="index" value="15" />
+			<column name="type" value="config" />
+			<column name="label" value="Cold over" />
+			<column name="unit" value="°C" />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="power_mode" />
+			<column name="index" value="16" />
+			<column name="type" value="config" />
+			<column name="label" value="Power mode" />
+			<column name="description" value="0 = silent, 1 = smart, 2 = turbo." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="current_time" />
+			<column name="index" value="32" />
+			<column name="type" value="config" />
+			<column name="label" value="Current time" />
+			<column name="description" value="High byte is hours, low byte is minutes." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="timer_on_time" />
+			<column name="index" value="33" />
+			<column name="type" value="config" />
+			<column name="label" value="Timer on time" />
+			<column name="description" value="High byte is hours, low byte is minutes." />
+		</insert>
+		<insert tableName="parameter">
+			<column name="name" value="timer_off_time" />
+			<column name="index" value="34" />
+			<column name="type" value="config" />
+			<column name="label" value="Timer off time" />
+			<column name="description" value="High byte is hours, low byte is minutes." />
+		</insert>
+	</changeSet>
+	
+	<changeSet author="zealux-monitor" id="2022-06-11_3">
+		<comment>Adjust the model. We don't need IDs.</comment>
+		<dropSequence sequenceName="value_id_seq" />
+		<dropColumn tableName="status">
+			<column name="id" />
+		</dropColumn>
+		<dropColumn tableName="config">
+			<column name="id" />
+		</dropColumn>
+	</changeSet>
+
+	<changeSet author="zealux-monitor" id="2022-06-11_4">
+		<comment>Values are not always integers.</comment>
+		<modifyDataType tableName="status" columnName="value" newDataType="number"/>
+		<modifyDataType tableName="config" columnName="value" newDataType="number"/>
+	</changeSet>
+
+	<changeSet author="zealux-monitor" id="2022-06-11_5">
+		<comment>Add index for the index values as well.</comment>
+
+		<createIndex indexName="status_index_idx" tableName="status" unique="false">
+			<column name="index" />
+		</createIndex>
+		<createIndex indexName="config_index_idx" tableName="config" unique="false">
+			<column name="index" />
+		</createIndex>
+	</changeSet>
+</databaseChangeLog>

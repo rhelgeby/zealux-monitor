@@ -1,0 +1,8 @@
+target/
+.classpath
+.project
+.settings
+dev-configuration.properties
+myconfig.properties
+dependency-reduced-pom.xml
+output.log
