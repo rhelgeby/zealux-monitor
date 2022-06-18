@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# PROVIDE: zealuxmon
+# REQUIRE: NETWORKING DAEMON postgresql
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name=zealuxmon
+rcvar=zealuxmon_enable
+
+title="Zealux-Monitor"
+
+pidfile="/var/run/${name}_daemon.pid"
+
+zealuxmon_chdir="/usr/local/zealuxmon"
+zealuxmon_config_file="/usr/local/etc/zealuxmon.properties"
+zealuxmon_java_cmd="/usr/local/bin/java"
+zealuxmon_java_args="-jar zealuxmon.jar --config ${zealuxmon_config_file}"
+
+command="/usr/sbin/daemon"
+command_args="-r -t ${title} -f -P ${pidfile} ${zealuxmon_java_cmd} ${zealuxmon_java_args}"
+
+load_rc_config $name
+run_rc_command "$1"
