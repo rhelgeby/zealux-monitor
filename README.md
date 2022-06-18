@@ -34,6 +34,24 @@ Only tested with PostgreSQL, however this initial version should work with most
 databases. I'm also experimenting with views for reports (not included) and
 these use functions specific to PostgreSQL.
 
+## Running as a Service on FreeBSD
+
+This is a very simple setup. It doesn't specify a user so the service wil run as
+root by default. To run as a different user, check the manual for `daemon` and
+modify command_args in `/usr/local/etc/rc.d/zealuxmon` to set the user to run as.
+
+Do these steps as root:
+
+1. Create folder: `mkdir /usr/local/zealuxmon`.
+2. Create folder `mkdir /var/log/zealuxmon`.
+3. Symlink log folder: `ln -s /var/log/zealuxmon /usr/local/zealuxmon/log`
+4. Install freebsd/zealuxmon to `/usr/local/etc/rc.d/`.
+5. Make it executable: `chmod +x /usr/local/etc/rc.d/zealuxmon`
+6. Install service/configurationTemplate.properties to `/usr/local/etc/zealuxmon.properties` (renamed for the script).
+7. Edit `/usr/local/etc/zealuxmon.properties` and adjust settings for your environment.
+8. Enable the service: `sysrc zealuxmon_enable=YES`
+9. Start the service: `service zealuxmon start`
+
 ## Future Work
 
 For now it's just a service. I'm planning to extend the monitor to write
