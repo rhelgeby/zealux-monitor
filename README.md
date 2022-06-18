@@ -40,6 +40,8 @@ This is a very simple setup. It doesn't specify a user so the service wil run as
 root by default. To run as a different user, check the manual for `daemon` and
 modify command_args in `/usr/local/etc/rc.d/zealuxmon` to set the user to run as.
 
+Assumes Java 17 is already installed.
+
 Do these steps as root:
 
 1. Create folder: `mkdir /usr/local/zealuxmon`.
@@ -47,10 +49,11 @@ Do these steps as root:
 3. Symlink log folder: `ln -s /var/log/zealuxmon /usr/local/zealuxmon/log`
 4. Install freebsd/zealuxmon to `/usr/local/etc/rc.d/`.
 5. Make it executable: `chmod +x /usr/local/etc/rc.d/zealuxmon`
-6. Install service/configurationTemplate.properties to `/usr/local/etc/zealuxmon.properties` (renamed for the script).
-7. Edit `/usr/local/etc/zealuxmon.properties` and adjust settings for your environment.
-8. Enable the service: `sysrc zealuxmon_enable=YES`
-9. Start the service: `service zealuxmon start`
+6. Build the application and install the JAR file to `/usr/local/zealuxmon/zealuxmon.jar` (renamed for the script).
+7. Install service/configurationTemplate.properties to `/usr/local/etc/zealuxmon.properties` (renamed for the script).
+8. Edit `/usr/local/etc/zealuxmon.properties` and adjust settings for your environment.
+9. Enable the service: `sysrc zealuxmon_enable=YES`
+10. Start the service: `service zealuxmon start`
 
 ## Future Work
 
