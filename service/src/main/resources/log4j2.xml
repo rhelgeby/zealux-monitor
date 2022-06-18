@@ -19,7 +19,11 @@
 		</RollingFile>
 	</Appenders>
 	<Loggers>
-		<Root level="debug">
+		<Logger name="no.helgeby.zealux" level="debug" additivity="false">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="File" />
+		</Logger>
+		<Root level="info">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="File" />
 		</Root>
