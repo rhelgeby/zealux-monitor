@@ -55,6 +55,17 @@ Do these steps as root:
 9. Enable the service: `sysrc zealuxmon_enable=YES`
 10. Start the service: `service zealuxmon start`
 
+
+## View Charts
+
+The www folder contains a simple page for showing some charts. It expects the
+data.json file in the same location.
+
+1. Install www to `/usr/local/zealuxmon/www/`.
+2. Edit `/usr/local/etc/zealuxmon.properties` and set `chart.dataFile` to `/usr/local/zealuxmon/www/data.json`.
+3. Configure web server root or a path to serve content in `/usr/local/zealuxmon/www/`.
+
+
 ## Future Work
 
 For now it's just a service. I'm planning to extend the monitor to write

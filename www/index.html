@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+	<title>Pool Statistics</title>
+</head>
+<body>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+
+	<h1 style="font-family: sans-serif">Pool Statistics</h1>
+	<div id="chartContainer" style="width:1000px; height:600px"><canvas id="chart"></canvas></div>
+
+	<script>
+		async function getChartData() {
+			let response = await fetch("data.json");
+			if (!response.ok) {
+				throw ("Error when fetching data.");
+			}
+			return response.json();
+		}
+
+		async function buildChart() {
+			const dataSource = await getChartData();
+			const ctx = document.getElementById('chart').getContext('2d');
+
+			const labels = dataSource.pastTwoDays.labels;
+			const values = dataSource.pastTwoDays.waterInTemp;
+
+			const scaleMin = Math.floor(Math.min(...values));
+			const scaleMax = Math.ceil(Math.max(...values));
+
+			const chartData = {
+				labels: dataSource.pastTwoDays.labels,
+				datasets: [{
+					label: 'Water In',
+					data: dataSource.pastTwoDays.waterInTemp,
+					backgroundColor: [
+						'rgba(0, 112, 192, 0.2)'
+					],
+					borderColor: [
+						'rgba(0, 112, 192, 1)'
+					],
+					borderWidth: 2,
+					pointRadius: 0,
+					hidden: false
+				},
+				{
+					label: 'Water Out',
+					data: dataSource.pastTwoDays.waterOutTemp,
+					backgroundColor: [
+						'rgba(255, 64, 64, 0.2)'
+					],
+					borderColor: [
+						'rgba(255, 64, 64, 1)'
+					],
+					borderWidth: 2,
+					pointRadius: 0,
+					hidden: true
+				},
+				{
+					label: 'Compressor Current',
+					data: dataSource.pastTwoDays.compressorCurrent,
+					backgroundColor: [
+						'rgba(102, 102, 102, 0.2)'
+					],
+					borderColor: [
+						'rgba(102, 102, 102, 1)'
+					],
+					borderWidth: 2,
+					pointRadius: 0,
+					hidden: false,
+					yAxisID: 'y2'
+				},
+				{
+					label: 'Exhaust Temp',
+					data: dataSource.pastTwoDays.exhaustTemp,
+					backgroundColor: [
+						'rgba(237, 125, 49, 0.2)'
+					],
+					borderColor: [
+						'rgba(237, 125, 49, 1)'
+					],
+					borderWidth: 2,
+					pointRadius: 0,
+					hidden: true
+				},
+				{
+					label: 'Ambient Temp',
+					data: dataSource.pastTwoDays.ambientTemp,
+					backgroundColor: [
+						'rgba(84, 130, 53, 0.2)'
+					],
+					borderColor: [
+						'rgba(84, 130, 53, 1)'
+					],
+					borderWidth: 2,
+					pointRadius: 0,
+					hidden: true
+				}
+				]
+			};
+
+			const chart = new Chart(ctx, {
+				type: 'line',
+				data: chartData,
+				options: {
+					scales: {
+						y: {
+							ticks: {
+								stepSize: 0.1
+							},
+							stack: 'stack1',
+							stackWeight: 2,
+							stacked: false
+						},
+						y2: {
+							stack: 'stack1',
+							stackWeight: 1,
+							stacked: true
+						}
+
+					},
+					interaction: {
+						mode: 'index',
+						intersect: false
+					}
+				}
+			});
+		}
+
+		buildChart();
+	</script>
+
+</body>
+</html>
