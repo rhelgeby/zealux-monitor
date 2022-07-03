@@ -22,12 +22,6 @@
 			const dataSource = await getChartData();
 			const ctx = document.getElementById('chart').getContext('2d');
 
-			const labels = dataSource.pastTwoDays.labels;
-			const values = dataSource.pastTwoDays.waterInTemp;
-
-			const scaleMin = Math.floor(Math.min(...values));
-			const scaleMax = Math.ceil(Math.max(...values));
-
 			const chartData = {
 				labels: dataSource.pastTwoDays.labels,
 				datasets: [{
