@@ -66,11 +66,6 @@ data.json file in the same location.
 3. Configure web server root or a path to serve content in `/usr/local/zealuxmon/www/`.
 
 
-## Future Work
-
-For now it's just a service. I'm planning to extend the monitor to write
-various reports to file and present them using a simple web app with graphs.
-
 # Credits
 
 Thanks to [Mikko Strandborg](https://github.com/strandborg) for reverse
