@@ -35,6 +35,9 @@ public class Configuration {
 	private String databasePassword;
 	private String databaseSchema;
 
+	private Duration chartDataUpdateInterval;
+	private File chartDataFile;
+
 	private boolean debugPacketInfoDump;
 
 	public Configuration(File file) throws IOException {
@@ -65,6 +68,9 @@ public class Configuration {
 			databasePassword = getString("database.password");
 			databaseSchema = getString("database.schema");
 		}
+
+		chartDataUpdateInterval = getDurationMinutes("chart.updateInterval");
+		chartDataFile = getFile("chart.dataFile");
 
 		debugPacketInfoDump = getBoolean("debug.packetInfoDump");
 	}
@@ -133,6 +139,18 @@ public class Configuration {
 		return databaseSchema;
 	}
 
+	public Duration getChartDataUpdateInterval() {
+		return chartDataUpdateInterval;
+	}
+
+	public boolean isChartUpdateEnabled() {
+		return !chartDataUpdateInterval.isZero() && chartDataFile != null;
+	}
+
+	public File getChartDataFile() {
+		return chartDataFile;
+	}
+
 	public boolean isPacketInfoDumpEnabled() {
 		return debugPacketInfoDump;
 	}
@@ -174,5 +192,14 @@ public class Configuration {
 	private Duration getDurationMinutes(String key) {
 		long value = getLong(key);
 		return Duration.ofMinutes(value);
+	}
+
+	private File getFile(String key) {
+		String path = getString(key);
+		File file = new File(path);
+		if (file.isDirectory()) {
+			throw new IllegalArgumentException("Property '" + key + "' must be a path to a file.");
+		}
+		return file;
 	}
 }

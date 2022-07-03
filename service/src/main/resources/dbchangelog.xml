@@ -439,4 +439,25 @@
 			<column name="index" />
 		</createIndex>
 	</changeSet>
+
+	<changeSet author="zealux-monitor" id="2022-07-03_1">
+		<comment>Add view for easier reading of stats.</comment>
+
+		<createView viewName="stats" replaceIfExists="true">
+			SELECT
+				s.probe_time,
+			    max(CASE WHEN p.name = 'water_in_temp' THEN s.value ELSE NULL END) AS water_in_temp,
+			    max(CASE WHEN p.name = 'water_out_temp' THEN s.value ELSE NULL END) AS water_out_temp,
+			    max(CASE WHEN p.name = 'compressor_current' THEN s.value ELSE NULL END) AS comp_current,
+			    max(CASE WHEN p.name = 'compressor_frequency' THEN s.value ELSE NULL END) AS comp_frequency,
+			    max(CASE WHEN p.name = 'eev_steps' THEN s.value ELSE NULL END) AS eev_steps,
+			    max(CASE WHEN p.name = 'fan_speed' THEN s.value ELSE NULL END) AS fan_speed,
+			    max(CASE WHEN p.name = 'heating_pipe_temp' THEN s.value ELSE NULL END) AS heating_pipe_temp,
+			    max(CASE WHEN p.name = 'exhaust_temp' THEN s.value ELSE NULL END) AS exhaust_temp,
+			    max(CASE WHEN p.name = 'ambient_temp' THEN s.value ELSE NULL END) AS ambient_temp
+			FROM status s
+			JOIN "parameter" p ON p."type" = 'status' AND p."index" = s."index"
+			GROUP BY s.probe_time;
+		</createView>
+	</changeSet>
 </databaseChangeLog>

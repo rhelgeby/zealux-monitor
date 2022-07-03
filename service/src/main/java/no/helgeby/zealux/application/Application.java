@@ -32,6 +32,8 @@ import liquibase.Liquibase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import no.helgeby.zealux.chart.ChartDataWriter;
+import no.helgeby.zealux.chart.StatisticsDAO;
 import no.helgeby.zealux.controller.ConnectionManager;
 import no.helgeby.zealux.controller.Parameter;
 import no.helgeby.zealux.controller.ParameterDescription;
@@ -48,8 +50,11 @@ public class Application {
 	private ConnectionManager connectionManager;
 	private Configuration configuration;
 	private Queue<StatusResponse> responseQueue;
+	private ChartDataWriter chartDataWriter;
 
 	private Thread connectionThread;
+	private Thread chartDataThread;
+
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
 
@@ -86,8 +91,6 @@ public class Application {
 
 	public Application(Configuration configuration) throws StartupException {
 		this.configuration = configuration;
-		startConnectionThread();
-		createShutdownHook();
 
 		if (configuration.isDatabaseEnabled()) {
 			this.dataSource = createDataSource();
@@ -95,6 +98,13 @@ public class Application {
 			updateDatabase();
 		}
 
+		startConnectionThread();
+
+		if (configuration.isChartUpdateEnabled()) {
+			startChartDataThread();
+		}
+
+		createShutdownHook();
 		responseCollectorLoop();
 	}
 
@@ -276,12 +286,24 @@ public class Application {
 		return parameters;
 	}
 
+	private void startChartDataThread() {
+		log.info("Starting chart data writer thread.");
+		StatisticsDAO statisticsDAO = new StatisticsDAO(jdbcTemplate);
+		chartDataWriter = new ChartDataWriter(configuration, statisticsDAO);
+		chartDataThread = new Thread(chartDataWriter, "chart");
+		chartDataThread.start();
+	}
+
 	private void createShutdownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			@Override
 			public void run() {
 				connectionManager.stop();
 				connectionThread.interrupt();
+				if (chartDataWriter != null && chartDataThread != null) {
+					chartDataWriter.stop();
+					chartDataThread.interrupt();
+				}
 			}
 		}, "Shutdown"));
 	}

@@ -6,3 +6,4 @@ dev-configuration.properties
 myconfig.properties
 dependency-reduced-pom.xml
 output.log
+data.json
