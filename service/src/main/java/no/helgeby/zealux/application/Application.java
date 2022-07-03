@@ -164,7 +164,7 @@ public class Application {
 
 		try {
 			for (StatusResponse response : responses) {
-				if (configuration.isDatabaseEnabled()) {
+				if (configuration.isDatabaseStatsInsertionEnabled()) {
 					List<Parameter> parameters = getParameters(response);
 					Instant probeTime = response.getTimestamp();
 
@@ -174,7 +174,7 @@ public class Application {
 					insertStatusRows(statusRows);
 					insertConfigRows(configRows);
 				} else {
-					log.info("Database is disabled. Skipping insertion of responses.");
+					log.info("Database insertions disabled, showing report instead.");
 					String report = ReportWriter.prettyPrint(response);
 					log.info("Status report:\n" + report);
 				}

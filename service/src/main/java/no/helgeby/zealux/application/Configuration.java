@@ -28,6 +28,7 @@ public class Configuration {
 	private Duration offlinePollingInterval;
 
 	private boolean databaseEnabled;
+	private boolean databaseStatsInsertionEnabled;
 	private String databaseDriverClassName;
 	private String databaseUrl;
 	private String databaseUsername;
@@ -57,6 +58,7 @@ public class Configuration {
 
 		databaseEnabled = getBoolean("database.enabled");
 		if (databaseEnabled) {
+			databaseStatsInsertionEnabled = getBoolean("database.databaseStatsInsertionEnabled");
 			databaseDriverClassName = getString("database.driverClassName");
 			databaseUrl = getString("database.url");
 			databaseUsername = getString("database.username");
@@ -105,6 +107,10 @@ public class Configuration {
 
 	public boolean isDatabaseEnabled() {
 		return databaseEnabled;
+	}
+
+	public boolean isDatabaseStatsInsertionEnabled() {
+		return databaseStatsInsertionEnabled;
 	}
 
 	public String getDatabaseDriverClassName() {
