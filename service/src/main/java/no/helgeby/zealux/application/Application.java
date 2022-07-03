@@ -211,7 +211,7 @@ public class Application {
 		List<ConfigRow> configRows = new ArrayList<>();
 
 		for (Parameter parameter : parameters) {
-			if (parameter.getParameterDescription().type != ObjectHeader.SUB_TYPE_STATUS) {
+			if (parameter.getParameterDescription().type != ObjectHeader.SUB_TYPE_CONFIG) {
 				continue;
 			}
 			configRows.add(new ConfigRow(parameter, probeTime));
