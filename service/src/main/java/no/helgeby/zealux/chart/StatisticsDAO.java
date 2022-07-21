@@ -19,11 +19,25 @@ public class StatisticsDAO {
 	public List<StatsRow> detailStats(Duration amount) {
 		Timestamp since = durationFromNow(amount);
 
+		// Note: Depends on PostgreSQL due to generate_series and date_bin functions.
+
 		String sql = """
-				SELECT *
-				FROM stats
-				WHERE probe_time >= ?
-				ORDER BY probe_time
+				SELECT
+					time_interval AS probe_time,
+					avg(stats.water_in_temp) AS water_in_temp,
+					avg(stats.water_out_temp) AS water_out_temp,
+					avg(stats.comp_current) AS comp_current,
+					avg(stats.comp_frequency) AS comp_frequency,
+					avg(stats.eev_steps) AS eev_steps,
+					avg(stats.fan_speed) AS fan_speed,
+					avg(stats.heating_pipe_temp) AS heating_pipe_temp,
+					avg(stats.exhaust_temp) AS exhaust_temp,
+					avg(stats.ambient_temp) AS ambient_temp
+				FROM
+					generate_series(date_trunc('hour', ?::timestamp)::timestamp, now()::timestamp, '5 minutes') AS time_interval
+				LEFT JOIN stats ON time_interval = date_bin('5 minutes', stats.probe_time, date_trunc('day', stats.probe_time))
+				GROUP BY time_interval 
+				ORDER BY time_interval;
 				""";
 
 		Object[] args = { since };

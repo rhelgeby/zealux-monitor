@@ -7,3 +7,4 @@ myconfig.properties
 dependency-reduced-pom.xml
 output.log
 data.json
+.DS_Store
