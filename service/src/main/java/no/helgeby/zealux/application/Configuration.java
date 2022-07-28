@@ -144,7 +144,7 @@ public class Configuration {
 	}
 
 	public boolean isChartUpdateEnabled() {
-		return !chartDataUpdateInterval.isZero() && chartDataFile != null;
+		return isDatabaseEnabled() && !chartDataUpdateInterval.isZero() && chartDataFile != null;
 	}
 
 	public File getChartDataFile() {
