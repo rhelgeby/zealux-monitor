@@ -14,6 +14,10 @@ class PoolStatistics {
 
         const canvasContext = document.getElementById(canvasId).getContext('2d');
         const data = this.dataSource[canvasId];
+        // First index is dash length, second is length of gaps between dashes.
+        const dashSegments = [6, 3];
+
+        const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
 
         const chartData = {
             labels: data.labels,
@@ -29,7 +33,12 @@ class PoolStatistics {
                 borderWidth: 2,
                 pointRadius: 0,
                 hidden: false,
-                cubicInterpolationMode: 'monotone'
+                cubicInterpolationMode: 'monotone',
+                segment: {
+                    borderColor: ctx => skipped(ctx, 'rgba(0, 112, 192, 0.5)'),
+                    borderDash: ctx => skipped(ctx, dashSegments),
+                  },
+                spanGaps: true
             },
             {
                 label: 'Water Out',
@@ -42,8 +51,13 @@ class PoolStatistics {
                 ],
                 borderWidth: 2,
                 pointRadius: 0,
-                hidden: false,
-                cubicInterpolationMode: 'monotone'
+                hidden: true,
+                cubicInterpolationMode: 'monotone',
+                segment: {
+                    borderColor: ctx => skipped(ctx, 'rgba(255, 64, 64, 0.5)'),
+                    borderDash: ctx => skipped(ctx, dashSegments),
+                  },
+                spanGaps: true
             },
             {
                 label: 'Compressor Current',
@@ -58,7 +72,12 @@ class PoolStatistics {
                 pointRadius: 0,
                 hidden: false,
                 yAxisID: 'y2',
-                cubicInterpolationMode: 'monotone'
+                cubicInterpolationMode: 'monotone',
+                segment: {
+                    borderColor: ctx => skipped(ctx, 'rgba(102, 102, 102, 0.5)'),
+                    borderDash: ctx => skipped(ctx, dashSegments),
+                  },
+                spanGaps: true
             },
             {
                 label: 'Exhaust Temp',
@@ -72,7 +91,12 @@ class PoolStatistics {
                 borderWidth: 2,
                 pointRadius: 0,
                 hidden: true,
-                cubicInterpolationMode: 'monotone'
+                cubicInterpolationMode: 'monotone',
+                segment: {
+                    borderColor: ctx => skipped(ctx, 'rgba(237, 125, 49, 0.5)'),
+                    borderDash: ctx => skipped(ctx, dashSegments),
+                  },
+                spanGaps: true
             },
             {
                 label: 'Ambient Temp',
@@ -86,7 +110,12 @@ class PoolStatistics {
                 borderWidth: 2,
                 pointRadius: 0,
                 hidden: true,
-                cubicInterpolationMode: 'monotone'
+                cubicInterpolationMode: 'monotone',
+                segment: {
+                    borderColor: ctx => skipped(ctx, 'rgba(84, 130, 53, 0.5)'),
+                    borderDash: ctx => skipped(ctx, dashSegments),
+                  },
+                spanGaps: true
             }
             ]
         };
