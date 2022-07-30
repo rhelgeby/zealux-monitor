@@ -7,6 +7,10 @@ if the Wi-Fi connection is unreliable or the device goes offline for a moment.
 
 Meant to run as a service.
 
+![Database](database.png)
+
+![Statistics](stats.png)
+
 ## Requirements
 * Java 17
 * Maven
