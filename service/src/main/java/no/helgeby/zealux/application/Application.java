@@ -298,9 +298,11 @@ public class Application {
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			@Override
 			public void run() {
-				connectionManager.stop();
-				connectionThread.interrupt();
-				if (chartDataWriter != null && chartDataThread != null) {
+				if (connectionThread != null) {
+					connectionManager.stop();
+					connectionThread.interrupt();
+				}
+				if (chartDataThread != null) {
 					chartDataWriter.stop();
 					chartDataThread.interrupt();
 				}
