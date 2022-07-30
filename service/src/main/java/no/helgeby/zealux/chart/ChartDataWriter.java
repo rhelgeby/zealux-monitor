@@ -3,6 +3,7 @@ package no.helgeby.zealux.chart;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -56,8 +57,10 @@ public class ChartDataWriter implements Runnable {
 			chartData.pastTwoDays = getDetails(Duration.ofDays(2));
 			chartData.pastWeek = getHourly(Duration.ofDays(7));
 			chartData.pastMonth = getHourly(Duration.ofDays(30));
-			final Duration tenYears = Duration.ofDays(3650);
-			chartData.allTimeDaily = getDaily(tenYears);
+
+			Instant seasonStartTime = configuration.getChartSeasonStartTime();
+			final Duration span = Duration.between(seasonStartTime, Instant.now());
+			chartData.allTimeDaily = getDaily(span);
 
 			updateJson();
 		} catch (DataAccessException e) {

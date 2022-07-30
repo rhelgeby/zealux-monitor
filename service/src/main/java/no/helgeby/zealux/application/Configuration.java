@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Properties;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -37,6 +38,7 @@ public class Configuration {
 
 	private Duration chartDataUpdateInterval;
 	private File chartDataFile;
+	private Instant chartSeasonStartTime;
 
 	private boolean debugPacketInfoDump;
 
@@ -71,6 +73,7 @@ public class Configuration {
 
 		chartDataUpdateInterval = getDurationMinutes("chart.updateInterval");
 		chartDataFile = getFile("chart.dataFile");
+		chartSeasonStartTime = getInstant("chart.seasonStartTime");
 
 		debugPacketInfoDump = getBoolean("debug.packetInfoDump");
 	}
@@ -151,6 +154,10 @@ public class Configuration {
 		return chartDataFile;
 	}
 
+	public Instant getChartSeasonStartTime() {
+		return chartSeasonStartTime;
+	}
+
 	public boolean isPacketInfoDumpEnabled() {
 		return debugPacketInfoDump;
 	}
@@ -201,5 +208,10 @@ public class Configuration {
 			throw new IllegalArgumentException("Property '" + key + "' must be a path to a file.");
 		}
 		return file;
+	}
+
+	private Instant getInstant(String key) {
+		String value = getString(key);
+		return Instant.parse(value);
 	}
 }
