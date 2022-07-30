@@ -51,16 +51,16 @@ public class StatisticsDAO {
 
 		String sql = """
 				SELECT
-					date_trunc('hour', probe_time) as hour,
-					avg(water_in_temp) as avg_water_in_temp,
-					avg(water_out_temp) as avg_water_out_temp,
-					avg(comp_current) as avg_comp_current,
-					avg(exhaust_temp) as avg_exhaust_temp,
-					avg(ambient_temp) as avg_ambient_temp
-				FROM stats
-				WHERE probe_time >= ?
-				GROUP BY date_trunc('hour', probe_time)
-				ORDER BY "hour"
+					time_interval AS hour,
+					avg(water_in_temp) AS avg_water_in_temp,
+					avg(water_out_temp) AS avg_water_out_temp,
+					avg(comp_current) AS avg_comp_current,
+					avg(exhaust_temp) AS avg_exhaust_temp,
+					avg(ambient_temp) AS avg_ambient_temp
+				FROM generate_series(date_trunc('hour', ?::timestamp)::timestamp, now()::timestamp, '1 hour') AS time_interval
+				LEFT JOIN stats ON time_interval = date_bin('1 hour', stats.probe_time, date_trunc('day', stats.probe_time))
+				GROUP BY time_interval
+				ORDER BY time_interval;
 				""";
 
 		Object[] args = { since };
@@ -74,16 +74,16 @@ public class StatisticsDAO {
 
 		String sql = """
 				SELECT
-					date(date_trunc('day', probe_time)) as "date",
-					avg(water_in_temp) as avg_water_in_temp,
-					avg(water_out_temp) as avg_water_out_temp,
-					avg(comp_current) as avg_comp_current,
-					avg(exhaust_temp) as avg_exhaust_temp,
-					avg(ambient_temp) as avg_ambient_temp
-				FROM stats
-				WHERE probe_time >= ?
-				GROUP BY date_trunc('day', probe_time)
-				ORDER BY "date"
+					time_interval AS date,
+					avg(water_in_temp) AS avg_water_in_temp,
+					avg(water_out_temp) AS avg_water_out_temp,
+					avg(comp_current) AS avg_comp_current,
+					avg(exhaust_temp) AS avg_exhaust_temp,
+					avg(ambient_temp) AS avg_ambient_temp
+				FROM generate_series(date_trunc('day', ?::timestamp)::timestamp, now()::timestamp, '1 day') AS time_interval
+				LEFT JOIN stats ON time_interval = date_bin('1 day', stats.probe_time, date_trunc('day', stats.probe_time))
+				GROUP BY time_interval
+				ORDER BY time_interval;
 				""";
 
 		Object[] args = { since };
